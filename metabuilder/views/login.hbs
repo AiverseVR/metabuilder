@@ -1,0 +1,76 @@
+<htmls lang='en'>
+  {{> head }}
+
+  <body>
+    <main class="py-12 md:py-16 lg:py-20">
+      <div class="flex flex-col items-center space-y-4 md:space-y-5 lg:space-y-6">
+        <img src="/logo.png" alt="Medverse Logo" />
+        <h1 class="text-center">PLEASE SIGN IN TO CONTINUE</h1>
+          <form>
+            <div class='frame-top'></div>
+            <div class='frame-bottom'></div>
+            <div class="input-group">
+              <label for="email">Email</label>
+              <input id="email" type="email" required placeholder="" />
+            </div>
+            <div class="input-group">
+              <label for="password">Password</label>
+              <input id="password" type="password" required placeholder="" />
+            </div>    
+            <br />
+            <button class="w-full btn" type="submit">SIGN IN</button>    
+            <p class="font-bold text-center">OR</p>
+            <a href="/auth/login-with-wallet" id="wallet-login" class="flex items-center justify-center w-full btn btn-outline" type="button">SIGN IN WITH WALLET</a>    
+            <button id="uauth-login" class="flex items-center justify-center w-full bg-[#0D67FE]" type="button">
+              <img src="/assets/images/uauth.svg" class="w-full h-16" alt="uAuth Logo" />
+            </button>
+          </form>
+          <p class="text-[20px] lg:text-[24px]">Don't have an account? <a class="font-bold" href="/auth/register">Sign up</a></p>
+      </div>    
+    </main>
+  </body>
+  <script src="/uauth.js" type="module"></script>
+  <script>
+
+    document.addEventListener("DOMContentLoaded", function(){
+      function signIn({ email, password }) {
+        return axios.post('/auth/login', { email, password })
+        .then((res) => {
+          window.location.href = '/dashboard';
+        })
+      }
+      const form = document.querySelector('form');    
+      form.addEventListener('submit', (e) => {
+        e.preventDefault();
+        const email = form.elements.email.value;
+        const password = form.elements.password.value;
+        signIn({ email, password });
+      });
+
+      const uauth = new UAuth({
+        clientID: "4db89e5b-b075-4750-a09c-2537be477aed",
+        redirectUri: window.location.href,
+        scope: "openid wallet email email:optional profile:optional social:optional"
+      })
+
+      const uauthLogin = document.getElementById('uauth-login');
+      uauthLogin.addEventListener('click', (e) => {
+        e.preventDefault();
+        uauth.login();
+      })      
+
+      uauth.loginCallback()
+        .then((res) => {
+          console.log(res);        
+          const { accessToken } = res.authorization;
+          axios.post('/auth/login/uauth', { accessToken })
+            .then(async (res) => {
+              window.location.href = '/dashboard';
+            })
+        })
+        .catch((err) => {
+          console.log(err);
+        })
+    })
+  </script>
+</html>

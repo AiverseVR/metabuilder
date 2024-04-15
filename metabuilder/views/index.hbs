@@ -1,0 +1,37 @@
+<html lang='en'>
+  {{> head }}
+  <body x-data="{modal: false}">
+    {{> navbar }}            
+
+    <main class="pt-[108px]">
+      <div class="px-6 py-12 mx-auto max-w-screen-2xl md:py-16 lg:py-20 md:px-8 lg:px-10">
+          <div class="grid gap-4 md:grid-cols-2 lg:grid-cols-3 md:gap-6 lg:gap-8">
+            {{#each spaces}}            
+              <div class="flex flex-col space-y-5 bg-[#22b78f]/10 p-5 border border-[#22B78F]">
+                <div class="w-full aspect-[2/1]">
+                  <a href="/spaces/{{this.slug}}" target="_blank">
+                    <img src="{{this.previewImage}}" class="w-full" alt="" />
+                  </a>
+                </div>
+                <div class="flex items-center w-full">
+                  <a href="/spaces/{{this.slug}}" target="_blank" class="w-full truncate text-[24px] font-bold">
+                    {{this.name}}
+                  </a>
+                  <div class="flex space-x-4">   
+                    <button onclick="copyContentToClipboard(getSpaceUrl('{{this.slug}}'))">
+                      <svg width="25" height="28" viewBox="0 0 25 28" fill="none" xmlns="http://www.w3.org/2000/svg">
+                        <path d="M18 0.25H3C1.625 0.25 0.5 1.375 0.5 2.75V20.25H3V2.75H18V0.25ZM21.75 5.25H8C6.625 5.25 5.5 6.375 5.5 7.75V25.25C5.5 26.625 6.625 27.75 8 27.75H21.75C23.125 27.75 24.25 26.625 24.25 25.25V7.75C24.25 6.375 23.125 5.25 21.75 5.25ZM21.75 25.25H8V7.75H21.75V25.25Z" fill="#14C2A3"/>
+                      </svg>
+                    </button>                              
+                  </div>
+                </div>                
+              </div>   
+              {{/each}}         
+          </div>
+      </div>
+    </main>
+  </body>
+  <script>
+  
+  </script>
+</html>

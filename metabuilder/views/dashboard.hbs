@@ -1,0 +1,137 @@
+<html lang='en'>
+  {{> head }}
+  
+  <body x-data="{modal: window.location.search.includes('?action=create'), step: 1}">
+    {{> navbar }}            
+
+    <main class="pt-[108px]">      
+      <div class="px-6 py-12 mx-auto max-w-screen-2xl md:py-16 lg:py-20 md:px-8 lg:px-10">
+          <h1>Welcome {{name}}</h1>
+          <div class="grid gap-4 mt-4 md:grid-cols-2 lg:grid-cols-3 md:gap-6 lg:gap-8 md:mt-6">
+            {{#each spaces}}            
+              <div class="flex flex-col space-y-5 bg-[#22b78f]/10 p-5 border border-[#22B78F]">
+                <div class="w-full aspect-[2/1]">
+                  <a href="/spaces/{{this.slug}}" target="_blank">
+                    <img src="{{this.previewImage}}" class="w-full aspect-video" style="aspect-ratio: 16/9;" alt="" />
+                  </a>
+                </div>
+                <div class="flex items-center w-full">
+                  <a href="/spaces/{{this.slug}}" target="_blank" class="w-full truncate text-[24px] font-bold">
+                    {{this.name}}
+                  </a>
+                  <div class="flex space-x-4">   
+                    <button onclick="copyContentToClipboard(getSpaceUrl('{{this.slug}}'))">
+                      <svg width="25" height="28" viewBox="0 0 25 28" fill="none" xmlns="http://www.w3.org/2000/svg">
+                        <path d="M18 0.25H3C1.625 0.25 0.5 1.375 0.5 2.75V20.25H3V2.75H18V0.25ZM21.75 5.25H8C6.625 5.25 5.5 6.375 5.5 7.75V25.25C5.5 26.625 6.625 27.75 8 27.75H21.75C23.125 27.75 24.25 26.625 24.25 25.25V7.75C24.25 6.375 23.125 5.25 21.75 5.25ZM21.75 25.25H8V7.75H21.75V25.25Z" fill="#14C2A3"/>
+                      </svg>
+                    </button>           
+                    <a href="/spaces/{{this.slug}}/download" target="_blank">
+                      <svg width="18" height="22" viewBox="0 0 18 22" fill="none" xmlns="http://www.w3.org/2000/svg">
+                        <path d="M17.75 8.25H12.75V0.75H5.25V8.25H0.25L9 17L17.75 8.25ZM0.25 19.5V22H17.75V19.5H0.25Z" fill="#14C2A3"/>
+                      </svg>
+                    </a>
+                  </div>
+                </div>
+                <a target="_blank" href="/spaces/{{this.slug}}?debug=true" class="w-full btn btn-sm btn-outline">EDIT SPACE</a>
+              </div>
+            {{else}}
+              <div class="flex flex-col items-center col-span-3 py-12 space-y-8 md:py-32 lg:py-40">
+                <div class="text-[20px] lg:text-[24px] font-bold">You don't have any space</div>
+                <button class="px-10 btn" @click='step = 1; modal = true'>
+                  Create Space
+                </button>
+              </div>
+            {{/each}}
+          </div>
+      </div>
+    </main>
+
+    <div x-show="modal" x-cloak x-data="{template:0}">      
+      <div class="fixed inset-0 flex items-center justify-center bg-black/70">
+        <form class="bg-[#0c1226]">
+          <div class='frame-top'></div>
+          <div class='frame-bottom'></div>
+          <div class="input-group" x-show="step === 1">
+            <label for="slug">Space URL *</label>
+            <div class="flex">              
+              <input id="_slug" type="text" class="min-w-[465px]" disabled value="https://Medverse.site/spaces/" />
+              <input id="slug" type="text" class="w-full -ml-0.5" required placeholder="your-slug" />
+            </div>
+          </div>
+          <div class="input-group" x-show="step === 1">
+            <label for="name">Space Name *</label>
+            <input id="name" type="text" required placeholder="" />
+          </div>
+         <div class="flex items-center">
+            <input id="isVR" type="checkbox" value="" class="w-4 h-4 text-blue-600 bg-gray-100 border-gray-300 rounded">
+            <label for="isVR" class="ml-2 font-medium text-gray-900 dark:text-gray-300">Enable VR Mode</label>
+        </div>
+          <input type="hidden" id="template" :value="template" hidden />
+          <p class="font-bold text-center text-[44px] space-y-[50px]" x-show="step === 2">CHOOSE TEMPLATE</p>
+          <div class="grid grid-cols-2 gap-6 lg:gap-8" x-show="step === 2">
+            <div class="flex flex-col space-y-5 p-5 border border-[#22B78F] cursor-pointer" @click="template=0" :class="{'border-[#22B78F]':template===0, 'bg-[#22B78F]/30':template===0}">
+              <div class="w-full aspect-[806/499] object-cover">
+                <img src="/templates/empty.jpg" class="object-cover h-full" alt="" />
+              </div>
+              <div class="flex items-center w-full">
+                <span class="w-full truncate text-[24px] font-bold">
+                  Create from Scratch
+                </span>                  
+              </div>                
+            </div>
+            <div class="flex flex-col space-y-5 p-5 border border-[#22B78F] cursor-pointer" @click="template=1" :class="{'border-[#22B78F]':template===1, 'bg-[#22B78F]/30':template===1}">
+              <div class="w-full aspect-[806/499]">
+                <img src="/templates/gallery.jpg" class="object-cover h-full" alt="" />
+              </div>
+              <div class="flex items-center w-full">
+                <span class="w-full truncate text-[24px] font-bold">
+                  Gallery Template 1
+                </span>                  
+              </div>                
+            </div>
+          </div>
+          <div class="flex justify-end space-x-4 md:space-x-6">
+            <button type="button" @click="modal=false; step = 0" class="btn btn-sm btn-outline">CANCEL</button>
+            <button type="button" @click="step = 1" x-show="step === 2" id="prev-step" class="btn btn-sm">BACK</button>
+            <button type="button" @click="step = 2" x-show="step === 1" disabled id="next-step" class="btn btn-sm">NEXT STEP</button>
+            <button type="submit" x-show="step === 2" class="btn btn-sm">CREATE</button>
+          </div>
+        </form>
+      </div>
+    </div>
+  </body>
+  <script>
+    function createSpace({ name, slug, entities, template, isVR }) {      
+      return axios.post('/spaces', { name, slug, entities, template: template * 1, isVR })
+      .then((res) => {
+        window.location.href = '/dashboard';
+      })
+    }
+    const slug = document.querySelector('#slug');
+    const name = document.querySelector('#name');
+    const isVR = document.querySelector('#isVR');
+    const btnNextStep = document.querySelector('#next-step');
+
+    function validateForm1() {
+      if (slug.value.length > 4 && name.value.length > 2){
+        btnNextStep.disabled = false;
+      } else {
+        btnNextStep.disabled = true;
+      }
+    }
+
+    slug.addEventListener('input', validateForm1);
+    name.addEventListener('input', validateForm1);
+
+    const form = document.querySelector('form');    
+    form.addEventListener('submit', (e) => {
+      e.preventDefault();
+      const slug = form.elements.slug.value;
+      const name = form.elements.name.value;
+      const template = form.elements.template.value;
+      const isVR = form.elements.isVR.checked;
+      createSpace({ name, template, slug, isVR, entities: [] });
+    });
+
+  </script>
+</html>

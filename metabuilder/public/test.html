@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Test Theta Video</title>
+    <link href="https://vjs.zencdn.net/8.3.0/video-js.css" rel="stylesheet" />
+    <script src="https://vjs.zencdn.net/7.15.4/video.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/hls.js@0.12.4"></script>
+    <script src="https://d1ktbyo67sh8fw.cloudfront.net/js/theta.umd.min.js"></script>
+    <script src="https://d1ktbyo67sh8fw.cloudfront.net/js/theta-hls-plugin.umd.min.js"></script>
+    <script src="https://d1ktbyo67sh8fw.cloudfront.net/js/videojs-theta-plugin.min.js"></script>
+  </head>
+  <body>
+    play video boii {{.}}
+    <video id="player-container"></video>
+  </body>
+
+  <script>
+    const optionalHlsOpts = null;
+    const player = (window.player = videojs('player-container', {
+      techOrder: ['theta_hlsjs', 'html5'],
+      sources: [
+        {
+          src: 'https://media.thetavideoapi.com/user_jvghp7e8q42cjb7f0g3s63iiyfg/srvacc_5vai4hu90fkinvf0m4vittm8i/video_vwjj2rtpe86ib1kbvjzjungvxv/master.m3u8',
+          type: 'application/vnd.apple.mpegurl',
+          label: 'auto',
+        },
+      ],
+      loop: true,
+      autoplay: true,
+      muted: true,
+      controls: false,
+    }));
+    player.controls(false);
+  </script>
+</html>

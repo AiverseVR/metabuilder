@@ -1,0 +1,76 @@
+<nav class='fixed top-0 inset-x-0 h-[108px] bg-[#141A31]'>
+  <div class='flex h-full w-full justify-between items-center px-[32px] md:px-[48px] lg:px-[68px]'>
+    <div class='flex items-center space-x-4 md:space-x-6 lg:space-x-10'>
+      <a href='/' class='flex items-center space-x-5'>
+        <img src='/logo.png' alt='Medverse Logo' class='h-[51px]' />
+        <span class='font-bold text-[24px]'>Medverse</span>
+      </a>
+      <a
+        href='/'
+        class='text-white font-bold text-[18px] lg:text-[20px]'
+        :class="{'text-[#22b78f]': window.location.pathname === '/'}"
+      >Explore</a>
+    </div>
+    <div class='flex items-center space-x-5'>
+      {{#if isAuthenticated}}
+        <button
+          x-cloak
+          x-show="window.location.pathname !== '/dashboard'"
+          @click='window.location.href = "/dashboard"'
+          class='btn btn-outline btn-sm'
+        >
+          DASHBOARD
+        </button>
+      {{else}}
+        <button
+          x-cloak
+          x-show="window.location.pathname === '/'"
+          @click='window.location.href = "/auth/login"'
+          class='btn btn-outline btn-sm'
+        >
+          SIGN IN / SIGN UP
+        </button>
+      {{/if}}
+      <button
+        x-cloak
+        x-show="window.location.pathname === '/dashboard'"
+        @click='step = 1; modal = true'
+        class='btn btn-outline btn-sm'
+      >
+        CREATE SPACE
+      </button>
+      {{#if isAuthenticated}}
+        <div x-data='{show: false}' class='relative'>
+          <button
+            @click='show=!show'
+            class='bg-[#14C2A3] h-[56px] w-[56px] rounded-full flex items-center justify-center'
+          >
+            <svg width='20' height='25' viewBox='0 0 20 25' fill='none' xmlns='http://www.w3.org/2000/svg'>
+              <path
+                d='M13.5992 9.9638C14.554 9.00907 15.0903 7.71417 15.0903 6.36398C15.0903 5.01379 14.554 3.71889 13.5992 2.76416C12.6445 1.80943 11.3496 1.27307 9.99942 1.27307C8.64923 1.27307 7.35434 1.80943 6.39961 2.76416C5.44488 3.71889 4.90851 5.01379 4.90851 6.36398C4.90851 7.71417 5.44488 9.00907 6.39961 9.9638C7.35434 10.9185 8.64923 11.4549 9.99942 11.4549C11.3496 11.4549 12.6445 10.9185 13.5992 9.9638Z'
+                stroke='white'
+                stroke-linecap='round'
+                stroke-linejoin='round'
+              ></path>
+              <path
+                d='M3.69974 17.8825C5.37052 16.2117 7.63659 15.2731 9.99942 15.2731C12.3623 15.2731 14.6283 16.2117 16.2991 17.8825C17.9699 19.5533 18.9085 21.8193 18.9085 24.1822H1.09033C1.09033 21.8193 2.02897 19.5533 3.69974 17.8825Z'
+                stroke='white'
+                stroke-linecap='round'
+                stroke-linejoin='round'
+              ></path>
+            </svg>
+          </button>
+          <div
+            x-show='show'
+            x-cloak
+            class='top-[112%] left-1/2 -translate-x-1/2 absolute bg-[#131A31] rounded shadow-lg overflow-hidden border-1 border-[#14C2A3]/70'
+          >
+            <div class='py-2 px-6 hover:bg-[#22b78f] rounded'>
+              <a href='/auth/logout' class='block text-white text-[16px]' role='menuitem'>Logout</a>
+            </div>
+          </div>
+        </div>
+      {{/if}}
+    </div>
+  </div>
+</nav>
